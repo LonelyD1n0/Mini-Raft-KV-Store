@@ -3,7 +3,7 @@
 #
 
 # 将源代码添加到此项目的可执行文件。
-add_executable (CMakeTarget "src/mini_raft_kv_store.cpp" "include/mini_raft_kv_store.h" "tests/test.cpp")
+add_executable (CMakeTarget "src/mini_raft_kv_store.cpp" "include/mini_raft_kv_store.h" "tests/test.cpp" "src/main.cpp")
 
 target_include_directories(CMakeTarget PRIVATE
   "${CMAKE_CURRENT_SOURCE_DIR}/include"
