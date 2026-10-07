@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
+#include <cctype>
 #include "mini_raft_kv_store.h"
 
 static bool translateCommand(const std::string& command,MiniRaftKVStore& kvmap) {
@@ -23,16 +25,20 @@ static bool translateCommand(const std::string& command,MiniRaftKVStore& kvmap) 
 
 	if (!str.empty()) {
 		vec.push_back(str);
-	}
+	}// push最后一个单词块
 
 	n = vec.size();
 	if (n == 0) return true;
-	std::string com_ = vec[0];
+	std::string com_ = vec[0];// 命令
+
+	std::transform(com_.begin(), com_.end(), com_.begin(),[](unsigned char c) {
+			return std::toupper(c);
+		});// 统一成大写
 
 	if (com_ == "PUT") {
 		if (n != 3) return false;
 
-		std::string key_ = vec[1], value_ = vec[2];
+		std::string key_ = vec[1], value_ = vec[2];// 键值
 		auto res = kvmap.Put(key_, value_);
 		if (res == true) {
 			std::cout << "OK." << std::endl;
@@ -41,7 +47,7 @@ static bool translateCommand(const std::string& command,MiniRaftKVStore& kvmap) 
 		return res;
 	}
 
-	if (com_ == "GET") {
+	else if (com_ == "GET") {
 		if (n != 2) return false;
 
 		std::string key_ = vec[1];
@@ -56,7 +62,7 @@ static bool translateCommand(const std::string& command,MiniRaftKVStore& kvmap) 
 		}
 	}
 
-	if (com_ == "DELETE") {
+	else if (com_ == "DELETE") {
 		if (n != 2) return false;
 
 		std::string key_ = vec[1];
@@ -66,6 +72,11 @@ static bool translateCommand(const std::string& command,MiniRaftKVStore& kvmap) 
 		}
 		return res;
 	}
+
+	else {
+		std::cout << "UNKNOWN COMMAND." << std::endl;
+		return true;
+	}// 未知命令报告
 
 	return true;
 }
