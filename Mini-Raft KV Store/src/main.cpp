@@ -1,8 +1,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <algorithm>
-#include <cctype>
+#include <algorithm> // std::transform();
+#include <cctype> // std::toupper();
 #include "mini_raft_kv_store.h"
 
 static bool translateCommand(const std::string& command,MiniRaftKVStore& kvmap) {
